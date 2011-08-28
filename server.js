@@ -43,6 +43,7 @@ var assetsSettings = {
 			'http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js'
 			, 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js'
 			, 'http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'
+			, 'http://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js'
 			, siteConf.uri+'/socket.io/socket.io.js' // special case since the socket.io module serves its own js
 			, 'jquery.client.js'
 			, 'plugins.js'
@@ -63,8 +64,8 @@ var assetsSettings = {
 		, 'path': './public/css/'
 		, 'dataType': 'css'
 		, 'files': [
-			'client.css'
-			, 'style.css'
+			'style.css'
+			, 'client.css'
 		]
 		, 'debug': true
 		, 'preManipulate': {

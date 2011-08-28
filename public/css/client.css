@@ -1,30 +1,7 @@
-html {
-	gradient: #222_#000;
-	height: 100%;
-}
-body {
-	color: #000;
-	margin: 0;
-	font: 12px 'helvetica neue', helvetica, arial, sans-serif;
-	text-rendering: optimizeLegibility;
-}
-img {
-	-ms-interpolation-mode:bicubic;
-}
-a {
-	color: #000;
-	text-decoration: none;
-}
-a:hover {
-	text-decoration: underline;
-}
-strong {
-	font-weight: bold;
-}
 #connected {
-	position: absolute;
-	top: 35px;
-	left: 20px;
+	position: relative;
+	top: 0px;
+	left: 0px;
 	width: 100px;
 	height: 100px;
 	background: red;
@@ -37,9 +14,11 @@ strong {
 	text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
 	box-shadow: 0 0 15px rgba(0,0,0,0.4);
 }
+
 #connected.on {
 	background: green;
 }
+
 #connected .overlay {
 	border-radius: 50px;
 	gradient: rgba(255,255,255,0.4)_rgba(255,255,255,0.1);
@@ -50,6 +29,37 @@ strong {
 	height: 100%;
 	box-shadow: 0 0 5px rgba(0,0,0,0.6) inset;
 }
+
+.logins {
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+.logins li {
+	padding: 4px 0px;
+	border-bottom: 1px solid #eee;
+}
+.logins li:last-child {
+	border-bottom: 0;
+}
+.logins img {
+	margin: 0 7px 0 0;
+	position: relative;
+	top: 3px;
+	width: 16px;
+	height: 16px;
+}
+.logins a {
+	color: #000;
+}
+.logins .padding
+{
+	border-radius: 3px;
+	border: 1px solid #fff;
+	font-size: 13px;
+	background: #fff;
+}
+
 #bubble {
 	position: absolute;
 	top: 20px;
@@ -111,37 +121,4 @@ strong {
 	border-color:transparent #eee;
 }
 
-.logins {
-	position: fixed;
-	top: 35px;
-	right: 60px;
-	gradient: #2b2b2b_#010101;
-	border-radius: 5px;
-	border: 1px solid #000;
-	padding: 5px 5px;
-	margin: 0 0 5px;
-}
-.logins li {
-	padding: 4px 10px;
-	border-bottom: 1px solid #eee;
-}
-.logins li:last-child {
-	border-bottom: 0;
-}
-.logins img {
-	margin: 0 7px 0 0;
-	position: relative;
-	top: 3px;
-	width: 16px;
-	height: 16px;
-}
-.logins a {
-	color: #000;
-}
-.logins .padding
-{
-	border-radius: 3px;
-	border: 1px solid #fff;
-	font-size: 13px;
-	background: #fff;
-}
+
