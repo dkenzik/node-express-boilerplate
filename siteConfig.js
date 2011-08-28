@@ -1,15 +1,7 @@
 var settings = {
-	'sessionSecret': 'sessionSecret'
+	'sessionSecret': 'ItAintNoSecret'
 	, 'port': 8080
 	, 'uri': 'http://localhost:8080' // Without trailing /
-
-	// You can add multiple recipiants for notifo notifications
-	, 'notifoAuth': null /*[
-		{
-			'username': ''
-			, 'secret': ''
-		}
-	]*/
 
 	/*
 	// Enter API keys to enable auth services, remove entire object if they aren't used.
@@ -28,13 +20,12 @@ var settings = {
 		}
 	}
 	*/
+	, 'db': {'url': 'mongodb://127.0.0.1:27017/myDatabase/myCollection'}
 	, 'debug': (process.env.NODE_ENV !== 'production')
 };
 
 if (process.env.NODE_ENV == 'production') {
 	settings.uri = 'http://yourname.no.de';
 	settings.port = process.env.PORT || 80; // Joyent SmartMachine uses process.env.PORT
-
-	//settings.airbrakeApiKey = '0190e64f92da110c69673b244c862709'; // Error logging, Get free API key from https://airbrakeapp.com/account/new/Free
 }
 module.exports = settings;

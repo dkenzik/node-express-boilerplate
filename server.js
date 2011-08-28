@@ -3,27 +3,20 @@ var siteConf = require('./lib/getConfig');
 
 process.title = siteConf.uri.replace(/http:\/\/(www)?/, '');
 
-var airbrake;
-if (siteConf.airbrakeApiKey) {
-	airbrake = require('airbrake').createClient(siteConf.airbrakeApiKey);
-}
-
 process.addListener('uncaughtException', function (err, stack) {
 	console.log('Caught exception: '+err+'\n'+err.stack);
 	console.log('\u0007'); // Terminal bell
-	if (airbrake) { airbrake.notify(err); }
 });
 
 var connect = require('connect');
 var express = require('express');
 var assetManager = require('connect-assetmanager');
 var assetHandler = require('connect-assetmanager-handlers');
-var notifoMiddleware = require('connect-notifo');
 var DummyHelper = require('./lib/dummy-helper');
 
 // Session store
-var RedisStore = require('connect-redis')(express);
-var sessionStore = new RedisStore;
+var MongoStore = require('connect-mongo');
+var sessionStore = new MongoStore({url: siteConf.db.url})
 
 var app = module.exports = express.createServer();
 app.listen(siteConf.port, null);
@@ -31,6 +24,15 @@ app.listen(siteConf.port, null);
 // Setup socket.io server
 var socketIo = new require('./lib/socket-io-server.js')(app, sessionStore);
 var authentication = new require('./lib/authentication.js')(app, siteConf);
+
+// form validation
+var form = require("express-form"),
+  	filter = form.filter,
+  	validate = form.validate;
+
+// other useful modules
+email = require("mailer");
+
 // Setup groups for CSS / JS assets
 var assetsSettings = {
 	'js': {
@@ -38,9 +40,13 @@ var assetsSettings = {
 		, 'path': './public/js/'
 		, 'dataType': 'javascript'
 		, 'files': [
-			'http://code.jquery.com/jquery-latest.js'
+			'http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js'
+			, 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.js'
+			, 'http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js'
 			, siteConf.uri+'/socket.io/socket.io.js' // special case since the socket.io module serves its own js
 			, 'jquery.client.js'
+			, 'plugins.js'
+			, 'script.js'
 		]
 		, 'debug': true
 		, 'postManipulate': {
@@ -57,10 +63,19 @@ var assetsSettings = {
 		, 'path': './public/css/'
 		, 'dataType': 'css'
 		, 'files': [
-			'reset.css'
-			, 'client.css'
+			'client.css'
+			, 'style.css'
 		]
 		, 'debug': true
+		, 'preManipulate': {
+    // Regexp to match user-agents including MSIE.
+    'MSIE': [
+        assetHandler.yuiCssOptimize
+        , assetHandler.fixVendorPrefixes
+        , assetHandler.fixGradients
+        , assetHandler.stripDataUrlsPrefix
+    ]}
+    // Matches all (regex start line)
 		, 'postManipulate': {
 			'^': [
 				assetHandler.fixVendorPrefixes
@@ -84,6 +99,11 @@ app.configure('development', function(){
 });
 
 var assetsMiddleware = assetManager(assetsSettings);
+/*
+	<%- body %>
+	<% if (locals.dummyHelperHtml) {%><%- dummyHelperHtml%><% } %>
+
+*/
 
 // Settings
 app.configure(function() {
@@ -96,29 +116,16 @@ app.configure(function() {
 	app.use(express.bodyParser());
 	app.use(express.cookieParser());
 	app.use(assetsMiddleware);
+	
 	app.use(express.session({
-		'store': sessionStore
-		, 'secret': siteConf.sessionSecret
-	}));
+    secret: siteConf.sessionSecret,
+    store: sessionStore
+  }));
+  
 	app.use(express.logger({format: ':response-time ms - :date - :req[x-real-ip] - :method :url :user-agent / :referrer'}));
 	app.use(authentication.middleware.auth());
 	app.use(authentication.middleware.normalizeUserData());
 	app.use(express['static'](__dirname+'/public', {maxAge: 86400000}));
-
-	// Send notification to computer/phone @ visit. Good to use for specific events or low traffic sites.
-	if (siteConf.notifoAuth) {
-		app.use(notifoMiddleware(siteConf.notifoAuth, { 
-			'filter': function(req, res, callback) {
-				callback(null, (!req.xhr && !(req.headers['x-real-ip'] || req.connection.remoteAddress).match(/192.168./)));
-			}
-			, 'format': function(req, res, callback) {
-				callback(null, {
-					'title': ':req[x-real-ip]/:remote-addr @ :req[host]'
-					, 'message': ':response-time ms - :date - :req[x-real-ip]/:remote-addr - :method :user-agent / :referrer'
-				});
-			}
-		}));
-	}
 });
 
 // ENV based configuration
@@ -153,9 +160,7 @@ app.dynamicHelpers({
 
 // Error handling
 app.error(function(err, req, res, next){
-	// Log the error to Airbreak if available, good for backtracking.
 	console.log(err);
-	if (airbrake) { airbrake.notify(err); }
 
 	if (err instanceof NotFound) {
 		res.render('errors/404');
@@ -176,8 +181,10 @@ app.all('/', function(req, res) {
 		req.session.uid = (0 | Math.random()*1000000);
 	}
 	res.locals({
-		'key': 'value'
+		title : 'Page Title'
+   	,description: 'Page Description'
 	});
+	
 	res.render('index');
 });
 

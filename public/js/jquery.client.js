@@ -47,3 +47,4 @@
 		$$('#connected').removeClass('on').find('strong').text('Offline');
 	});
 })(jQuery);
+

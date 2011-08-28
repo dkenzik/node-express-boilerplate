@@ -1,18 +1,70 @@
-<!DOCTYPE html>
-<!--[if lt IE 7 ]> <html class="ie6 ie nojs"> <![endif]--> 
-<!--[if IE 7 ]> <html class="ie7 ie nojs"> <![endif]--> 
-<!--[if IE 8 ]> <html class="ie8 ie nojs"> <![endif]--> 
-<!--[if IE 9 ]> <html class="ie9 ie nojs"> <![endif]--> 
-<!--[if !IE]><!--> <html class="nojs"> <!--<![endif]-->
+<!doctype html>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
+<!--[if lt IE 7]> <html class="no-js ie6 oldie ie nojs" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie ie nojs" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie ie nojs" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js nojs" lang="en"> <!--<![endif]-->
 <head>
-	<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<link rel="stylesheet" href="/static/css/<%=assetsCacheHashes.css||0%>/style.css" type="text/css">
-	<title>node-express-boilerplate</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="google-site-verification" content="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+  
+	<link rel="stylesheet" href="/static/css/<%=assetsCacheHashes.css||0%>/client.css" type="text/css">
+	
+	<% if(locals.title) {%><title><%= locals.title %></title><% } %>
+  <% if(locals.description) {%><meta name="description" content="<%= description %>"><% } %>
+  <% if(locals.canonical) {%><link rel="canonical" href="<%= locals.canonical %>" /><% } %>
+  <meta name="ROBOTS" content="ALL" />
+	
+  <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  
+  <!-- All JavaScript at the bottom, except this Modernizr build incl. create your own custom Modernizr build: www.modernizr.com/download/ -->
+  <script src="/static/js/libs/modernizr-2.0.6.min.js"></script>
 </head>
 <body>
-	<%- body %>
-	<% if (locals.dummyHelperHtml) {%><%- dummyHelperHtml%><% } %>
+	<!--http://www.cssstickyfooter.com/using-sticky-footer-code.html-->
+	<div id="wrap">
+		<div id="header-container">
+			<header class="wrapper" >
+				<%- partial('shared/header') %>
+			</header>
+		</div>
+	
+		<div id="main" role="main" class="wrapper">
+			<aside>
+				<%- partial('shared/sidebar') %><!--[if !IE 7]>
+	<style type="text/css">
+		#wrap {display:table;height:100%}
+	</style>
+<![endif]-->
+
+			</aside>
+			<%- body %>
+		</div>
+	</div>
+	
+	<div id="footer-container">
+		<footer class="wrapper">
+			<%- partial('shared/footer') %>
+		</footer>
+	</div>
+  
 	<script src="/static/js/<%=assetsCacheHashes.js||0%>/client.js" type="text/javascript"></script>
+
+	<!-- Asynchronous Google Analytics snippet. mathiasbynens.be/notes/async-analytics-snippet -->
+  <script>
+    var _gaq=[['_setAccount','UA-XXXXXXXX-X'],['_trackPageview'],['_trackPageLoadTime']];
+    (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g,s)}(document,'script'));
+  </script>
+	
+  <!-- Prompt IE 6 users to install Chrome Frame. chromium.org/developers/how-tos/chrome-frame-getting-started -->
+  <!--[if lt IE 7 ]>
+    <script defer src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+    <script defer>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+  <![endif]-->
 </body>
 </html>
+
