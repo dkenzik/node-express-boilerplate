@@ -15,7 +15,7 @@ var assetHandler = require('connect-assetmanager-handlers');
 var DummyHelper = require('./lib/dummy-helper');
 
 // Session store
-var MongoStore = require('connect-mongo');
+var MongoStore = require('connect-mongo')(express);
 var sessionStore = new MongoStore({url: siteConf.db.url})
 
 var app = module.exports = express.createServer();
@@ -27,8 +27,8 @@ var authentication = new require('./lib/authentication.js')(app, siteConf);
 
 // form validation
 var form = require("express-form"),
-  	filter = form.filter,
-  	validate = form.validate;
+	filter = form.filter,
+	validate = form.validate;
 
 // other useful modules
 email = require("mailer");

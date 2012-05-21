@@ -16,5 +16,6 @@
     , "everyauth" : ">=0.2.18"
     , "nodemon" : ">=0.5.3"
     , "mailer": ">= 0.6.5"
+    , "express-form": ">=0.6.2"
   }
 }
